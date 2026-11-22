@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SHIVANSHU AI</title>
+
+<style>
+* {
+box-sizing:border-box;
+}
+
+body {
+margin:0;
+background:#080d1b;
+color:white;
+font-family:Arial,sans-serif;
+}
+
+header {
+background:#111b35;
+padding:20px;
+text-align:center;
+border-bottom:1px solid #263b65;
+}
+
+header h1 {
+color:#00e5ff;
+letter-spacing:3px;
+margin:0;
+}
+
+header p {
+color:#9baac9;
+font-size:12px;
+}
+
+.container {
+max-width:600px;
+margin:auto;
+padding:15px;
+}
+
+.settings {
+display:flex;
+gap:8px;
+margin-bottom:15px;
+}
+
+select,button {
+padding:12px;
+border:0;
+border-radius:10px;
+}
+
+select {
+flex:1;
+background:#172441;
+color:white;
+}
+
+.voice {
+background:#173d38;
+color:#00ffb3;
+}
+
+#chat {
+height:58vh;
+overflow-y:auto;
+background:#101a30;
+padding:15px;
+border-radius:15px;
+}
+
+.msg {
+padding:12px;
+margin:10px 0;
+border-radius:12px;
+max-width:90%;
+line-height:1.6;
+overflow-wrap:anywhere;
+white-space:pre-wrap;
+}
+
+.user {
+background:#075e79;
+margin-left:auto;
+}
+
+.bot {
+background:#263653;
+}
+
+.input-area {
+display:flex;
+gap:7px;
+margin-top:15px;
+}
+
+input {
+flex:1;
+min-width:0;
+padding:14px;
+border:1px solid #334b72;
+border-radius:10px;
+background:#172441;
+color:white;
+}
+
+.send {
+background:#00d9ff;
+font-weight:bold;
+}
+
+.mic {
+background:#7c4dff;
+color:white;
+}
+
+.footer {
+text-align:center;
+color:#7789aa;
+font-size:12px;
+margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>SHIVANSHU AI</h1>
+<p>PERSONAL SMART AI ASSISTANT</p>
+</header>
+
+<div class="container">
+
+<div class="settings">
+
+<select id="language">
+<option value="hi-IN">🇮🇳 Hindi Voice</option>
+<option value="en-US">🇬🇧 English Voice</option>
+</select>
+
+<button class="voice" onclick="toggleVoice()" id="voiceBtn">
+🔊 ON
+</button>
+
+</div>
+
+<div id="chat">
+
+<div class="msg bot">
+Namaste! 👋
+
+Main SHIVANSHU AI hoon.
+
+Main Science, Physics, Chemistry, Biology, Coding aur GK ke questions answer kar sakta hoon.
+
+Mujhse Hindi ya English mein poochho!
+</div>
+
+</div>
+
+<div class="input-area">
+
+<button class="mic" onclick="listen()">🎤</button>
+
+<input id="question"
+placeholder="Ask anything..."
+onkeydown="if(event.key==='Enter')sendMessage()">
+
+<button class="send" onclick="sendMessage()">SEND</button>
+
+</div>
+
+<div class="footer">
+CREATED BY SHIVANSHU | SCIENCE AI EDITION
+</div>
+
+</div>
+
+<script>
+
+let voiceEnabled=true;
+
+const chat=document.getElementById("chat");
+
+function addMessage(text,type){
+
+let div=document.createElement("div");
+
+div.className="msg "+type;
+div.textContent=text;
+
+chat.appendChild(div);
+
+chat.scrollTop=chat.scrollHeight;
+
+}
+
+// VOICE SYSTEM
+
+function toggleVoice(){
+
+voiceEnabled=!voiceEnabled;
+
+document.getElementById("voiceBtn").innerText=
+voiceEnabled?"🔊 ON":"🔇 OFF";
+
+if(!voiceEnabled){
+speechSynthesis.cancel();
+}
+
+}
+
+function speak(text){
+
+if(!voiceEnabled)return;
+
+if(!("speechSynthesis" in window))return;
+
+speechSynthesis.cancel();
+
+let speech=new SpeechSynthesisUtterance(text);
+
+speech.lang=document.getElementById("language").value;
+speech.rate=0.9;
+speech.pitch=1;
+
+let voices=speechSynthesis.getVoices();
+
+let selected=voices.find(v=>
+v.lang.toLowerCase()===speech.lang.toLowerCase()
+);
+
+if(selected){
+speech.voice=selected;
+}
+
+speechSynthesis.speak(speech);
+
+}
+
+// SCIENCE + GENERAL KNOWLEDGE
+
+function getAnswer(q){
+
+q=q.toLowerCase().trim();
+
+let hindi=
+document.getElementById("language").value==="hi-IN";
+
+// GREETINGS
+
+if(q.includes("hello")||q==="hi"||q.includes("namaste")){
+return "Namaste! Main SHIVANSHU AI hoon. Aaj main aapki kya help kar sakta hoon?";
+}
+
+if(q.includes("your name")||q.includes("tumhara naam")){
+return "Mera naam SHIVANSHU AI hai.";
+}
+
+if(q.includes("who created you")||q.includes("kisne banaya")){
+return "Mujhe Shivanshu ne apne coding project ke roop mein banaya hai.";
+}
+
+if(q.includes("who is shivanshu")||q.includes("shivanshu kaun")){
+return "Shivanshu ek student aur coding enthusiast hain jo apna personal AI assistant bana rahe hain.";
+}
+
+// PHYSICS
+
+if(q.includes("motion")){
+return "Motion is the change in position of an object with time. Hindi: Samay ke saath kisi vastu ki position badalna motion kehlata hai.";
+}
+
+if(q.includes("speed")){
+return "Speed = Distance / Time. SI unit of speed is metre per second (m/s).";
+}
+
+if(q.includes("velocity")){
+return "Velocity is speed in a particular direction. Iski SI unit metre per second hai.";
+}
+
+if(q.includes("gravity")){
+return "Gravity is the force of attraction between objects having mass. Earth ki gravity objects ko apni taraf kheenchti hai.";
+}
+
+if(q.includes("force")){
+return "Force is a push or pull. Its SI unit is Newton (N).";
+}
+
+if(q.includes("newton")){
+return "Newton's first law states that an object remains at rest or in uniform motion unless acted upon by an external unbalanced force.";
+}
+
+if(q.includes("energy")){
+return "Energy is the capacity to do work. Its SI unit is Joule (J).";
+}
+
+if(q.includes("work")){
+return "In Physics, work is done when a force causes displacement. Work = Force × Displacement in the direction of force.";
+}
+
+if(q.includes("sound")){
+return "Sound is produced by vibrations. It needs a material medium to travel.";
+}
+
+if(q.includes("electricity")){
+return "Electric current is the rate of flow of electric charge. Its SI unit is Ampere.";
+}
+
+// CHEMISTRY
+
+if(q.includes("atom")){
+return "An atom is the smallest unit of an element that retains its chemical properties. It contains protons, neutrons and electrons.";
+}
+
+if(q.includes("molecule")){
+return "A molecule is a group of two or more atoms chemically bonded together.";
+}
+
+if(q.includes("matter")){
+return "Matter is anything that has mass and occupies space. Matter commonly exists as solid, liquid and gas.";
+}
+
+if(q.includes("water")){
+return "Water has the chemical formula H2O. One molecule contains two hydrogen atoms and one oxygen atom.";
+}
+
+if(q.includes("oxygen")){
+return "Oxygen is a chemical element with symbol O and atomic number 8. It is essential for aerobic respiration.";
+}
+
+if(q.includes("hydrogen")){
+return "Hydrogen is the lightest chemical element. Its atomic number is 1.";
+}
+
+if(q.includes("mixture")){
+return "A mixture contains two or more substances physically combined. Example: salt water.";
+}
+
+if(q.includes("element")){
+return "An element is a pure substance made of only one type of atom.";
+}
+
+if(q.includes("compound")){
+return "A compound is a pure substance formed when two or more elements chemically combine in a fixed proportion.";
+}
+
+// BIOLOGY
+
+if(q.includes("photosynthesis")){
+return "Photosynthesis is the process by which green plants prepare food using sunlight, water and carbon dioxide. Oxygen is released.";
+}
+
+if(q.includes("cell")){
+return "Cell is the basic structural and functional unit of life. Hindi: Koshika jeevan ki mool ikai hai.";
+}
+
+if(q.includes("nucleus")){
+return "The nucleus controls many activities of the cell and contains genetic material.";
+}
+
+if(q.includes("mitochondria")){
+return "Mitochondria are organelles that release usable energy from food during cellular respiration.";
+}
+
+if(q.includes("heart")){
+return "The human heart is a muscular organ that pumps blood throughout the body. It has four chambers.";
+}
+
+if(q.includes("blood")){
+return "Blood transports oxygen, nutrients and other substances throughout the body.";
+}
+
+if(q.includes("brain")){
+return "The brain controls and coordinates many activities of the body. It is part of the central nervous system.";
+}
+
+if(q.includes("lungs")){
+return "Lungs are the main organs of breathing. They help exchange oxygen and carbon dioxide.";
+}
+
+if(q.includes("respiration")){
+return "Respiration is the process by which cells release energy from food.";
+}
+
+if(q.includes("tissue")){
+return "A tissue is a group of similar cells that work together to perform a specific function.";
+}
+
+// SCIENTIFIC GK
+
+if(q.includes("solar system")){
+return "Our Solar System has eight planets revolving around the Sun. Earth is the third planet.";
+}
+
+if(q.includes("sun")){
+return "The Sun is a star at the centre of our Solar System. It provides Earth with light and heat.";
+}
+
+if(q.includes("moon")){
+return "The Moon is Earth's natural satellite. It revolves around Earth.";
+}
+
+if(q.includes("planet")){
+return "There are eight planets in our Solar System: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus and Neptune.";
+}
+
+if(q.includes("human body")){
+return "The human body has many organ systems, including the digestive, respiratory, circulatory and nervous systems.";
+}
+
+if(q.includes("scientist")){
+return "Scientists study the natural world through observation, experiments and evidence.";
+}
+
+// CLASS 9
+
+if(q.includes("class 9")||q.includes("class nine")){
+return "Main Class 9 Science ke topics jaise Matter, Atoms, Cells, Tissues, Motion, Force, Gravity aur Work and Energy samjha sakta hoon.";
+}
+
+// CODING
+
+if(q.includes("html")){
+return "HTML stands for HyperText Markup Language. It is used to structure web pages.";
+}
+
+if(q.includes("javascript")){
+return "JavaScript is a programming language used to make websites interactive.";
+}
+
+if(q.includes("coding")){
+return "Coding means writing instructions that computers can execute. HTML, CSS, JavaScript and Python are popular technologies.";
+}
+
+// TIME AND DATE
+
+if(q.includes("time")){
+return "Current time: "+new Date().toLocaleTimeString();
+}
+
+if(q.includes("date")){
+return "Today's date: "+new Date().toLocaleDateString();
+}
+
+// PERSONALITY
+
+if(q.includes("how are you")||q.includes("kaise ho")){
+return "Main ready hoon! Aapka SHIVANSHU AI assistant aapki help ke liye taiyar hai.";
+}
+
+// DEFAULT
+
+return hindi
+?"Interesting question! Is topic ki information mere basic database mein abhi available nahi hai. Aap Science, Physics, Chemistry ya Biology ka doosra question pooch sakte hain."
+:"Interesting question! This information is not currently in my basic knowledge database. Try asking another Science, Physics, Chemistry or Biology question.";
+
+}
+
+// CHAT SYSTEM
+
+function sendMessage(){
+
+let input=document.getElementById("question");
+
+let q=input.value.trim();
+
+if(!q)return;
+
+addMessage(q,"user");
+
+input.value="";
+
+setTimeout(()=>{
+
+let answer=getAnswer(q);
+
+addMessage(answer,"bot");
+
+speak(answer);
+
+},400);
+
+}
+
+// MICROPHONE SYSTEM
+
+function listen(){
+
+const Recognition=
+window.SpeechRecognition||
+window.webkitSpeechRecognition;
+
+if(!Recognition){
+
+addMessage(
+"Speech recognition is not supported. Try Chrome browser.",
+"bot"
+);
+
+return;
+
+}
+
+let recognition=new Recognition();
+
+recognition.lang=
+document.getElementById("language").value;
+
+recognition.continuous=false;
+
+recognition.interimResults=false;
+
+recognition.onresult=function(event){
+
+let result=event.results[0][0].transcript;
+
+document.getElementById("question").value=result;
+
+sendMessage();
+
+};
+
+recognition.onerror=function(){
+
+addMessage(
+"Microphone error. Please check microphone permission.",
+"bot"
+);
+
+};
+
+recognition.start();
+
+}
+
+// VOICE INITIALIZATION
+
+if("speechSynthesis" in window){
+
+speechSynthesis.onvoiceschanged=function(){
+
+speechSynthesis.getVoices();
+
+};
+
+}
+
+</script>
+
+</body>
+  </html>
